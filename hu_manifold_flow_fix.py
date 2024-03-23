@@ -96,7 +96,7 @@ def run(cfg: ModulusConfig) -> None:
         fixed_dataset=False,
         batch_per_epoch=cfg.custom.batch_per_epoch,
     )
-    flow_domain.add_constraint(outlet_continuity, "outlet_continuity")
+    flow_domain.add_constraint(internal_continuity, "internal_continuity")
     outlet_pressure = PointwiseBoundaryConstraint(
         nodes=flow_nodes,
         geometry=geo.outlet,
