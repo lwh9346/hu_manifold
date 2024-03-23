@@ -39,7 +39,7 @@ custom:
       unit: kg/(m^3)
   bc:
     inlet_vol_flow: # 入口流量
-      value: 1
+      value: 0.05
       unit: ml/s
   batch_per_epoch: 1000
 run_mode: "train"
