@@ -19,6 +19,7 @@ batch_size:
   NoSlip: 4000
   Symmetry: 3000
   Interior: 3000
+  MCIP: 1000
 custom:
   nd:
     length: # 特征长度 除了改这边以外还需要修改geometry里面的设置

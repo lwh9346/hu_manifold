@@ -188,6 +188,31 @@ class SMM(object):
             ),
             parameterization=pr,
         ).rotate(np.pi / 2, "y", outlet_rotate_point)
+        # 额外的积分连续性平面
+        microchannel_intergal_plane = [
+            Plane(
+                (
+                    SMM_width / 2,
+                    microchannel_wall_width / 2 + index * microchannel_unit_width,
+                    microchannel_bottom_thickness,
+                ),
+                (
+                    SMM_width / 2,
+                    microchannel_wall_width / 2
+                    + microchannel_width
+                    + index * microchannel_unit_width,
+                    microchannel_bottom_thickness + microchannel_height,
+                ),
+                parameterization=pr,
+            )
+            for index in range(30)
+        ]
+        microchannel_intergal_plane = sum(
+            microchannel_intergal_plane[1:], start=microchannel_intergal_plane[0]
+        )
+        self.microchannel_intergal_plane = microchannel_intergal_plane.rotate(
+            -np.pi / 2, "z", (SMM_width / 2, SMM_width / 2, 0)
+        )
         # 边界条件
         x, y, z = Symbol("x"), Symbol("y"), Symbol("z")
         self.on_boundary_inlet = And(
@@ -227,3 +252,5 @@ if __name__ == "__main__":
     var_to_polyvtk(inlet, "visualize/inlet")
     outlet = smm.outlet.sample_boundary(10000)
     var_to_polyvtk(outlet, "visualize/outlet")
+    mcip = smm.microchannel_intergal_plane.sample_boundary(10000)
+    var_to_polyvtk(mcip, "visualize/mcip")

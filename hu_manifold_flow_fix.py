@@ -86,6 +86,17 @@ def run(cfg: ModulusConfig) -> None:
         batch_per_epoch=cfg.custom.batch_per_epoch,
     )
     flow_domain.add_constraint(outlet_continuity, "outlet_continuity")
+    internal_continuity = IntegralBoundaryConstraint(  # 出口流量
+        nodes=flow_nodes,
+        geometry=geo.microchannel_intergal_plane,
+        outvar={"normal_dot_vel": nd.ndim(inlet_vol_flow)},
+        batch_size=5,
+        integral_batch_size=cfg.batch_size.MCIP,
+        parameterization=geo.pr,
+        fixed_dataset=False,
+        batch_per_epoch=cfg.custom.batch_per_epoch,
+    )
+    flow_domain.add_constraint(outlet_continuity, "outlet_continuity")
     outlet_pressure = PointwiseBoundaryConstraint(
         nodes=flow_nodes,
         geometry=geo.outlet,
