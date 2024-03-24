@@ -93,7 +93,7 @@ def run(cfg: ModulusConfig) -> None:
         batch_size=5,
         integral_batch_size=cfg.batch_size.MCIP,
         parameterization=geo.pr,
-        fixed_dataset=False,
+        fixed_dataset=True,
         batch_per_epoch=cfg.custom.batch_per_epoch,
     )
     flow_domain.add_constraint(internal_continuity, "internal_continuity")
