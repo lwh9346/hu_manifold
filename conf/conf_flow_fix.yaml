@@ -12,7 +12,8 @@ training:
   rec_inference_freq: 10000
   rec_monitor_freq: 1000
   rec_constraint_freq: 2000
-  max_steps: 1500000
+  max_steps: 200000
+  amp: True
 batch_size:
   Inlet: 500
   Outlet: 1000
@@ -46,3 +47,4 @@ custom:
 run_mode: "train"
 network_dir: "./"
 initialization_network_dir: ""
+cuda_graphs: True

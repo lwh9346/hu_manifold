@@ -27,9 +27,19 @@ from modulus.sym import ureg
 
 from hu_manifold_geometry import *
 
+import wandb
+
 
 @modulus.sym.main(config_path="conf", config_name="conf_flow_fix")
 def run(cfg: ModulusConfig) -> None:
+    # 初始化日志
+    wandb_config = {
+        "nondimensionalization": cfg.custom.nd,
+        "batch_size": cfg.batch_size,
+        "navier_stocks": cfg.custom.ns,
+        "optimizer": cfg.optimizer,
+    }
+    wandb.init(project="hu_manifold", config=wandb_config)
     # 定义方程与特征量
     length_scale = quantity(cfg.custom.nd.length.value, cfg.custom.nd.length.unit)
     velocity_scale = quantity(cfg.custom.nd.velocity.value, cfg.custom.nd.velocity.unit)
@@ -71,7 +81,7 @@ def run(cfg: ModulusConfig) -> None:
         batch_size=5,
         integral_batch_size=cfg.batch_size.Inlet,
         parameterization=geo.pr,
-        fixed_dataset=False,
+        fixed_dataset=True,
         batch_per_epoch=cfg.custom.batch_per_epoch,
     )
     flow_domain.add_constraint(inlet_continuity, "inlet_continuity")
@@ -82,7 +92,7 @@ def run(cfg: ModulusConfig) -> None:
         batch_size=5,
         integral_batch_size=cfg.batch_size.Outlet,
         parameterization=geo.pr,
-        fixed_dataset=False,
+        fixed_dataset=True,
         batch_per_epoch=cfg.custom.batch_per_epoch,
     )
     flow_domain.add_constraint(outlet_continuity, "outlet_continuity")
@@ -209,8 +219,22 @@ def run(cfg: ModulusConfig) -> None:
             nodes=flow_nodes,
         )
     )
+
+    # 添加监控
+    class SolverWithLog(Solver):
+        def _cuda_graph_training_step(self, step: int):
+            loss_static, losses_static = super()._cuda_graph_training_step(step)
+            if step % cfg.training.print_stats_freq == 0:
+                wandb.log({"losses": losses_static}, step=step, commit=False)
+            return loss_static, losses_static
+
+        def record_monitors(self, step: int):
+            metrics = self.domain.rec_monitors(self.network_dir, self.writer, step)
+            wandb.log({"metrics": metrics}, step=step, commit=True)
+            return metrics
+
     # 求解
-    flow_solver = Solver(cfg, flow_domain)
+    flow_solver = SolverWithLog(cfg, flow_domain)
     flow_solver.solve()
 
 
