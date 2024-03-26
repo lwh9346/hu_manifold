@@ -60,7 +60,7 @@ def run(cfg: ModulusConfig) -> None:
     flow_net = FourierNetArch(
         input_keys,
         output_keys,
-        frequencies_params=[i * 3 for i in range(11)],
+        frequencies_params=[i for i in range(31)],
         skip_connections=True,
     )
     flow_nodes = (
