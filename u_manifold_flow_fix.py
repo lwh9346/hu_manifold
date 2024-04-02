@@ -57,8 +57,7 @@ def run(cfg: ModulusConfig) -> None:
     normal_dot_vel = NormalDotVec()
     # 网络架构
     input_keys = [Key("x"), Key("y"), Key("z")]
-    output_keys = [Key("a"), Key("b"), Key("c"), Key("p")]
-    c = Curl(("a", "b", "c"), ("u", "v", "w"))
+    output_keys = [Key("u"), Key("v"), Key("w"), Key("p")]
     flow_net = FourierNetArch(
         input_keys,
         output_keys,
