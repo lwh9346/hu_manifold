@@ -208,12 +208,12 @@ def run(cfg: ModulusConfig) -> None:
     flow_domain.add_monitor(
         PointwiseMonitor(
             inlet_sample,
-            ["normal_dot_vel"],
+            ["normal_dot_vel", "W_mi"],
             metrics={
-                "inlet_vol_flow": lambda var: ureg.convert(
-                    nd.dim(torch.mean(var["normal_dot_vel"]), "m/s")
-                    * nd.dim(geo.inlet_area, "m^2"),
-                    "m^3/s",
+                "inlet_vol_flow": lambda var: nd.dim(
+                    torch.mean(
+                        var["normal_dot_vel"] * var["W_mi"] / 2 * geo.total_width_S
+                    ),
                     "ul/s",
                 ),
             },

@@ -125,7 +125,7 @@ class MU(object):
             Gt(y, total_length - manifold_outlet_width_S / 2), self.on_boundary_top
         )
         # 用于计算的其他数值
-        self.inlet_area = total_width_S * manifold_inlet_width_S / 2
+        self.total_width_S = total_width_S
         print(time.strftime("[%H:%M:%S] - Geometry built", time.localtime(time.time())))
 
 
