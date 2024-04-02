@@ -67,7 +67,6 @@ def run(cfg: ModulusConfig) -> None:
         ns_nodes
         + normal_dot_vel.make_nodes()
         + [flow_net.make_node(name="flow_network")]
-        + c.make_nodes()
     )
     geo = MU(nd, parameterized=False)
     # 边界条件
