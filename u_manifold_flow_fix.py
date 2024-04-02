@@ -74,12 +74,12 @@ def run(cfg: ModulusConfig) -> None:
     inlet_vol_flow = quantity(
         cfg.custom.bc.inlet_vol_flow.value, cfg.custom.bc.inlet_vol_flow.unit
     )
-    # 入口流量，要除以2
+    # 入口流量，要除以2，且因为法向量朝外，要加负号
     inlet_continuity = IntegralBoundaryConstraint(
         nodes=flow_nodes,
         geometry=geo.fluid,
         criteria=geo.on_boundary_inlet,
-        outvar={"normal_dot_vel": nd.ndim(inlet_vol_flow) / 2},
+        outvar={"normal_dot_vel": -nd.ndim(inlet_vol_flow) / 2},
         batch_size=5,
         integral_batch_size=cfg.batch_size.Inlet,
         parameterization=geo.pr,
@@ -223,11 +223,14 @@ def run(cfg: ModulusConfig) -> None:
     flow_domain.add_monitor(
         PointwiseMonitor(
             outlet_sample,
-            ["normal_dot_vel"],
+            ["normal_dot_vel", "W_mo"],
             metrics={
-                "outlet_normal_dot_vel": lambda var: nd.dim(
-                    torch.mean(var["normal_dot_vel"]), "m/s"
-                )
+                "outlet_vol_flow": lambda var: nd.dim(
+                    torch.mean(
+                        var["normal_dot_vel"] * var["W_mo"] / 2 * geo.total_width_S
+                    ),
+                    "ul/s",
+                ),
             },
             nodes=flow_nodes,
         )
