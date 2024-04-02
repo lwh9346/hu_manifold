@@ -164,9 +164,10 @@ def run(cfg: ModulusConfig) -> None:
     interior = PointwiseInteriorConstraint(
         nodes=flow_nodes,
         geometry=geo.fluid,
-        outvar={"momentum_x": 0, "momentum_z": 0, "momentum_y": 0},
+        outvar={"continuity": 0, "momentum_x": 0, "momentum_z": 0, "momentum_y": 0},
         batch_size=cfg.batch_size.Interior,
         lambda_weighting={
+            "continuity": Symbol("sdf"),
             "momentum_x": Symbol("sdf"),
             "momentum_y": Symbol("sdf"),
             "momentum_z": Symbol("sdf"),
