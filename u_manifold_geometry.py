@@ -14,7 +14,6 @@ import time
 class MU(object):
     def __init__(
         self,
-        cfg: ModulusConfig,
         nd: NonDimensionalizer,
         parameterized: bool = False,
     ):
@@ -111,10 +110,10 @@ class MU(object):
         )
         # 边界条件
         x, y, z = Symbol("x"), Symbol("y"), Symbol("z")
-        self.on_boundary_semmetry_yz = Or(
+        self.on_boundary_symmetry_yz = Or(
             Lt(Abs(x - 0), eps), Lt(Abs(x - total_width_S / 2), eps)
         )
-        self.on_boundary_semmetry_xz = Or(
+        self.on_boundary_symmetry_xz = Or(
             Lt(Abs(y - 0), eps), Lt(Abs(y - total_length), eps)
         )
         self.on_boundary_bottom = Lt(Abs(z - 0), eps)
@@ -125,13 +124,15 @@ class MU(object):
         self.on_boundary_outlet = And(
             Gt(y, total_length - manifold_outlet_width_S / 2), self.on_boundary_top
         )
+        # 用于计算的其他数值
+        self.inlet_area = total_width_S * manifold_inlet_width_S / 2
         print(time.strftime("[%H:%M:%S] - Geometry built", time.localtime(time.time())))
 
 
 if __name__ == "__main__":
     from modulus.sym.utils.io.vtk import var_to_polyvtk
 
-    geo = MU(cfg=None, nd=NonDimensionalizer(length_scale=quantity(1000, "um")))
+    geo = MU(nd=NonDimensionalizer(length_scale=quantity(1000, "um")))
     sb = geo.solid.sample_boundary(100000)
     var_to_polyvtk(sb, "visualize/solid_boundary")
     si = geo.solid.sample_interior(100000)
