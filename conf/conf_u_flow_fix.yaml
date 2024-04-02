@@ -6,18 +6,20 @@ defaults:
   - _self_
 scheduler:
   decay_rate: 0.95
-  decay_steps: 10000
+  decay_steps: 5000
+optimizer:
+  lr: 5e-5
 training:
   rec_validation_freq: 10000
   rec_inference_freq: 10000
   rec_monitor_freq: 1000
   rec_constraint_freq: 2000
-  max_steps: 200000
+  max_steps: 100000
   amp: True
 batch_size:
-  Inlet: 500
-  Outlet: 1000
-  NoSlip: 4000
+  Inlet: 300
+  Outlet: 300
+  NoSlip: 10000
   Symmetry: 3000
   Interior: 3000
   MCIP: 1000
