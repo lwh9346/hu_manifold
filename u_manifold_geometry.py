@@ -108,6 +108,15 @@ class MU(object):
             )
             - self.solid
         )
+        self.mcip = Plane(
+            (total_length / 2, -microchannel_unit_width_S / 2, microchannel_thickness),
+            (
+                total_length / 2,
+                -microchannel_wall_width_S / 2,
+                microchannel_total_height,
+            ),
+            parameterization=pr,
+        ).rotate(np.pi / 2, center=(0, 0, 0))
         # 边界条件
         x, y, z = Symbol("x"), Symbol("y"), Symbol("z")
         self.on_boundary_symmetry_yz = Or(
@@ -145,3 +154,5 @@ if __name__ == "__main__":
     var_to_polyvtk(inlet, "visualize/inlet")
     outlet = geo.fluid.sample_boundary(10000, criteria=geo.on_boundary_outlet)
     var_to_polyvtk(outlet, "visualize/outlet")
+    mcip = geo.mcip.sample_boundary(10000)
+    var_to_polyvtk(mcip, "visualize/mcip")
