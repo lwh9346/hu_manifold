@@ -164,7 +164,7 @@ def run(cfg: ModulusConfig) -> None:
         outvar={"continuity": 0, "momentum_x": 0, "momentum_z": 0, "momentum_y": 0},
         batch_size=cfg.batch_size.Interior,
         lambda_weighting={
-            "continuity": Symbol("sdf"),
+            "continuity": Symbol("sdf")*100,
             "momentum_x": Symbol("sdf"),
             "momentum_y": Symbol("sdf"),
             "momentum_z": Symbol("sdf"),

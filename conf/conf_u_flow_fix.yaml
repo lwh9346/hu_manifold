@@ -2,7 +2,7 @@ defaults:
   - modulus_default
   - scheduler: tf_exponential_lr
   - optimizer: adam
-  - loss: grad_norm
+  - loss: sum
   - _self_
 scheduler:
   decay_rate: 0.95
@@ -19,9 +19,9 @@ training:
 batch_size:
   Inlet: 300
   Outlet: 300
-  NoSlip: 10000
+  NoSlip: 3000
   Symmetry: 3000
-  Interior: 3000
+  Interior: 10000
   MCIP: 1000
 custom:
   nd:
