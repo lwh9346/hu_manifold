@@ -40,7 +40,7 @@ def run(cfg: ModulusConfig) -> None:
         "navier_stocks": cfg.custom.ns,
         "optimizer": cfg.optimizer,
     }
-    # wandb.init(project="u_manifold", config=wandb_config, save_code=True)
+    wandb.init(project="u_manifold", config=wandb_config, save_code=True)
     # 定义方程与特征量
     length_scale = quantity(cfg.custom.nd.length.value, cfg.custom.nd.length.unit)
     velocity_scale = quantity(cfg.custom.nd.velocity.value, cfg.custom.nd.velocity.unit)
