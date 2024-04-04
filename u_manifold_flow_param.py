@@ -89,7 +89,6 @@ def run(cfg: ModulusConfig) -> None:
         parameterization=geo.pr,
         fixed_dataset=True,
         batch_per_epoch=cfg.custom.batch_per_epoch,
-        lambda_weighting={"normal_dot_vel": 10},
     )
     flow_domain.add_constraint(inlet_continuity, "inlet_continuity")
     # 出口流量，要除以2
@@ -103,7 +102,6 @@ def run(cfg: ModulusConfig) -> None:
         parameterization=geo.pr,
         fixed_dataset=True,
         batch_per_epoch=cfg.custom.batch_per_epoch,
-        lambda_weighting={"normal_dot_vel": 10},
     )
     flow_domain.add_constraint(outlet_continuity, "outlet_continuity")
     # 横向流量
@@ -116,7 +114,6 @@ def run(cfg: ModulusConfig) -> None:
         parameterization=geo.pr,
         fixed_dataset=True,
         batch_per_epoch=cfg.custom.batch_per_epoch,
-        lambda_weighting={"normal_dot_vel": 10},
     )
     flow_domain.add_constraint(internal_continuity, "internal_continuity")
     outlet_pressure = PointwiseBoundaryConstraint(
@@ -127,7 +124,6 @@ def run(cfg: ModulusConfig) -> None:
         batch_size=cfg.batch_size.Outlet,
         parameterization=geo.pr,
         batch_per_epoch=cfg.custom.batch_per_epoch,
-        lambda_weighting={"p": 1000},
     )
     flow_domain.add_constraint(outlet_pressure, "outlet_pressure")
     no_slip = PointwiseBoundaryConstraint(
@@ -144,7 +140,6 @@ def run(cfg: ModulusConfig) -> None:
             )
         ),
         batch_per_epoch=cfg.custom.batch_per_epoch,
-        lambda_weighting={"u": 10, "v": 10, "w": 10},
     )
     flow_domain.add_constraint(no_slip, "no_slip")
     symmetry_xz = PointwiseBoundaryConstraint(
@@ -155,7 +150,6 @@ def run(cfg: ModulusConfig) -> None:
         parameterization=geo.pr,
         criteria=geo.on_boundary_symmetry_xz,
         batch_per_epoch=cfg.custom.batch_per_epoch,
-        lambda_weighting={"v": 10},
     )
     flow_domain.add_constraint(symmetry_xz, "symmetry_xz")
     symmetry_yz = PointwiseBoundaryConstraint(
@@ -166,7 +160,6 @@ def run(cfg: ModulusConfig) -> None:
         parameterization=geo.pr,
         criteria=geo.on_boundary_symmetry_yz,
         batch_per_epoch=cfg.custom.batch_per_epoch,
-        lambda_weighting={"u": 10},
     )
     flow_domain.add_constraint(symmetry_yz, "symmetry_yz")
     interior = PointwiseInteriorConstraint(
@@ -175,7 +168,7 @@ def run(cfg: ModulusConfig) -> None:
         outvar={"continuity": 0, "momentum_x": 0, "momentum_z": 0, "momentum_y": 0},
         batch_size=cfg.batch_size.Interior,
         lambda_weighting={
-            "continuity": Symbol("sdf") * 10000,
+            "continuity": Symbol("sdf") * 100,
             "momentum_x": Symbol("sdf") * 100,
             "momentum_y": Symbol("sdf") * 100,
             "momentum_z": Symbol("sdf") * 100,
