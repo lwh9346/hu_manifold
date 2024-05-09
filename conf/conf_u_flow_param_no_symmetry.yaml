@@ -1,0 +1,52 @@
+defaults:
+  - modulus_default
+  - scheduler: tf_exponential_lr
+  - optimizer: adamw
+  - loss: sum
+  - _self_
+scheduler:
+  decay_rate: 0.95
+  decay_steps: 15000
+optimizer:
+  lr: 1e-3
+training:
+  rec_validation_freq: 10000
+  rec_inference_freq: 10000
+  rec_monitor_freq: 1000
+  rec_constraint_freq: 2000
+  max_steps: 400000
+  amp: True
+batch_size:
+  Inlet: 300
+  Outlet: 300
+  NoSlip: 2000
+  Symmetry: 2000
+  Interior: 5000
+  MCIP: 300
+custom:
+  nd:
+    length: # 特征长度 除了改这边以外还需要修改geometry里面的设置
+      value: 300
+      unit: um
+    velocity: # 特征速度
+      value: 1
+      unit: m/s
+    pressure: # 特征压强
+      value: 10000
+      unit: kg/(m*s^2)
+  ns:
+    nu: # 运动粘度
+      value: 0.000001
+      unit: m^2/s
+    rho: # 密度
+      value: 1000
+      unit: kg/(m^3)
+  bc:
+    inlet_vol_flow: # 入口流量
+      value: 2
+      unit: ul/s
+  batch_per_epoch: 1000
+run_mode: "train"
+network_dir: "./"
+initialization_network_dir: ""
+cuda_graphs: True
