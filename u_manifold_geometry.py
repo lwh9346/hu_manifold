@@ -141,7 +141,7 @@ class MU(object):
 if __name__ == "__main__":
     from modulus.sym.utils.io.vtk import var_to_polyvtk
 
-    geo = MU(nd=NonDimensionalizer(length_scale=quantity(1000, "um")))
+    geo = MU(nd=NonDimensionalizer(length_scale=quantity(1000, "um")),parameterized=True)
     sb = geo.solid.sample_boundary(100000)
     var_to_polyvtk(sb, "visualize/solid_boundary")
     si = geo.solid.sample_interior(100000)
