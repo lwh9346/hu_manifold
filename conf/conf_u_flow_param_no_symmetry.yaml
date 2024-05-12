@@ -14,8 +14,8 @@ training:
   rec_inference_freq: 10000
   rec_monitor_freq: 1000
   rec_constraint_freq: 2000
-  max_steps: 400000
-  amp: True
+  max_steps: 800000
+  amp: False
 batch_size:
   Inlet: 300
   Outlet: 300
